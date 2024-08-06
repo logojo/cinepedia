@@ -37,16 +37,18 @@ class _HomeViewState extends ConsumerState<_HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    final initialLoading = ref.watch(initialLoadigProvider);
+
+    if (initialLoading) {
+      return const Loader();
+    }
+
     //cuando ya tenemos data las extraemos con el watch
     final slideMovies = ref.watch(moviesSlideshowProvider);
     final movies = ref.watch(nowPlayingMoviesProvider);
     final popular = ref.watch(popularesProvider);
     final topRated = ref.watch(topRatedProvider);
     final upcoming = ref.watch(upcomingProvider);
-
-    if (slideMovies.isEmpty) {
-      return const Loader();
-    }
 
 //* SingleChildScrollView me permite  hacer scroll vertical de la aplicación
     //* return SingleChildScrollView(
