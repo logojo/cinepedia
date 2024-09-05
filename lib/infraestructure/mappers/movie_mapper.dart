@@ -4,6 +4,7 @@
 // el mapper es una capa de protección de el api que viene de afuera con la estructura de datos que es nuestra entity
 
 import 'package:cinemapedia/domain/entities/movie.dart';
+import 'package:cinemapedia/infraestructure/models/moviedb/details.dart';
 import 'package:cinemapedia/infraestructure/models/moviedb/movie_moviedb.dart';
 
 class MovieMapper {
@@ -26,4 +27,24 @@ class MovieMapper {
       video: moviedb.video,
       voteAverage: moviedb.voteAverage,
       voteCount: moviedb.voteCount);
+
+  static Movie movieDetailsToEntity(Details movie) => Movie(
+      adult: movie.adult,
+      backdropPath: movie.backdropPath != ''
+          ? 'https://image.tmdb.org/t/p/w500/${movie.backdropPath}'
+          : 'https://ih1.redbubble.net/image.4905811447.8675/flat,750x,075,f-pad,750x1000,f8f8f8.jpg',
+      genreIds: movie.genres.map((e) => e.name).toList(),
+      id: movie.id,
+      originalLanguage: movie.originalLanguage,
+      originalTitle: movie.originalTitle,
+      overview: movie.overview,
+      popularity: movie.popularity,
+      posterPath: movie.posterPath != ''
+          ? 'https://image.tmdb.org/t/p/w500/${movie.posterPath}'
+          : 'https://ih1.redbubble.net/image.4905811447.8675/flat,750x,075,f-pad,750x1000,f8f8f8.jpg',
+      releaseDate: movie.releaseDate,
+      title: movie.title,
+      video: movie.video,
+      voteAverage: movie.voteAverage,
+      voteCount: movie.voteCount);
 }
