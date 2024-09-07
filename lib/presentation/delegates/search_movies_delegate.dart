@@ -15,6 +15,8 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   //*StreamController permite crear y gestionar flujos de datos asíncronos, conocidos como Streams
   //* broadcast: Permite que múltiples oyentes escuchen el mismo flujo de datos es decir diferentes widgets
   StreamController<List<Movie>> debouncedMovies = StreamController.broadcast();
+  StreamController<bool> isLoading = StreamController.broadcast();
+
   Timer? _debounceTimer;
 
   SearchMovieDelegate(
@@ -23,10 +25,12 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   //*limpiando los streams de memoria
   void clearStreams() {
     debouncedMovies.close();
+    isLoading.close();
   }
 
   //*metodo que usara el StreamController
   void _onQueryChanged(String query) async {
+    isLoading.add(true);
     //verificando si el debounce tiene un valor
     //Si tiene un valor lo cancela
     if (_debounceTimer?.isActive ?? false) _debounceTimer!.cancel();
@@ -37,6 +41,7 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
 
       initialMovies = movies;
       debouncedMovies.add(movies);
+      isLoading.add(false);
     });
   }
 
@@ -47,12 +52,28 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   List<Widget>? buildActions(BuildContext context) {
     //*La variable query ya viene definida con el SearchDelegate y representa lo que telceamos en el input
     return [
-      //if (query.isNotEmpty)
-      FadeIn(
-          animate: query.isNotEmpty, //esta parte de codigo sustituye al if
-          duration: const Duration(milliseconds: 200),
-          child: IconButton(
-              onPressed: () => query = '', icon: const Icon(Icons.clear)))
+      StreamBuilder(
+          initialData: false,
+          stream: isLoading.stream,
+          builder: (context, snapshot) {
+            if (snapshot.data ?? false) {
+              return SpinPerfect(
+                  duration: const Duration(seconds: 20),
+                  spins: 10,
+                  infinite: true,
+                  child: IconButton(
+                      onPressed: () => query = '',
+                      icon: const Icon(Icons.refresh_rounded)));
+            }
+
+            return FadeIn(
+                animate:
+                    query.isNotEmpty, //esta parte de codigo sustituye al if
+                duration: const Duration(milliseconds: 200),
+                child: IconButton(
+                    onPressed: () => query = '',
+                    icon: const Icon(Icons.clear)));
+          }),
     ];
   }
 
