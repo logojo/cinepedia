@@ -184,29 +184,58 @@ class _ActorByMovie extends ConsumerWidget {
   }
 }
 
-class _CustomSliverAppBar extends StatelessWidget {
-  final Movie movie;
+//*FutureProvider se usa cuando se tiene algun tipo de tarea asincrona
+//*con este provider verifico si la pelicula esta marcada como favorito
+final isFavoriteProvider =
+    FutureProvider.family.autoDispose((ref, int movieId) {
+  final localStorageRepository = ref.watch(localStorageRepositoryProvider);
+  return localStorageRepository.isMovieFavorite(movieId);
+});
 
+class _CustomSliverAppBar extends ConsumerWidget {
+  final Movie movie;
   const _CustomSliverAppBar({required this.movie});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.of(context).size;
+    final isFavorite = ref.watch(isFavoriteProvider(movie.id));
+
     return SliverAppBar(
       backgroundColor: Colors.black,
       expandedHeight: size.height * 0.7, //obteniendo el 70% de la pantalla
       foregroundColor: Colors.white,
       actions: [
         IconButton(
-            onPressed: () {
-              //todo: realizar el toggle
-            },
-            icon: const Icon(Icons.favorite_border)
-            // icon: Icon(
-            //   Icons.favorite_rounded,
-            //   color: Colors.red.shade800,
-            // ),
-            )
+          onPressed: () async {
+            //*al acerlo con este provider solo tengo acceso a la bd y agrego o quitolas peliculas a favoritos de la bd
+            //* pero no de el list que las muestra en pantalla
+            // ref.read(localStorageRepositoryProvider).toggleFaviorite(movie);
+
+            //* con este provider accedo a la bd y ademas actualizo el estado de la lista que almacena las peliculas
+            //* y las muestra en panatalla
+
+            //* como es una función asincrona hay que esperar a que se complete para despues invalidar el estado de isFavoriteProvider
+            await ref
+                .read(favoriteMoviesProvider.notifier)
+                .toggleFavorite(movie);
+
+            //*lo invalidamos para que vuelva a hacer la petición
+            //*esta funcion canbia el icono de corazon de rojo a blanco
+            ref.invalidate(isFavoriteProvider(movie.id));
+          },
+
+          //* isFavorite puede usar el metodo when por que es una variable que recibe un valor asincrono del provider
+          icon: isFavorite.when(
+              loading: () => const CircularProgressIndicator(strokeWidth: 2),
+              data: (isFavorite) => isFavorite
+                  ? Icon(
+                      Icons.favorite_rounded,
+                      color: Colors.red.shade800,
+                    )
+                  : const Icon(Icons.favorite_border),
+              error: (_, __) => throw UnimplementedError()),
+        )
       ],
       flexibleSpace: FlexibleSpaceBar(
         //*Comente el titulo ya que no se ve bien en el diseño

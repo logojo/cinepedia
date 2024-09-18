@@ -2,7 +2,15 @@
 // los datos de la api pueden venir diferentes pero con estos datos se va atrabajar en toda la aplicación
 // para transformar los datos de la api a esta estructura se utilizara los mappers
 
+import 'package:isar/isar.dart';
+
+part 'movie.g.dart';
+
+@collection
 class Movie {
+  //*id que se almacenara en al amacenamiento local con isar
+  Id? isarId;
+
   final bool adult;
   final String backdropPath;
   final List<String> genreIds;
