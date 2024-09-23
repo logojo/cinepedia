@@ -52,7 +52,7 @@ class _MovieMasonryState extends State<MovieMasonry> {
             return Column(
               children: [
                 const SizedBox(
-                  height: 40,
+                  height: 20,
                 ),
                 MoviePosterLink(movie: widget.movies[index])
               ],

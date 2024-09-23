@@ -5,20 +5,19 @@ class CustomButtomNavigation extends StatelessWidget {
   final int currentIndex;
   const CustomButtomNavigation({super.key, required this.currentIndex});
 
-  void onItemTapped(BuildContext context, int index) {
-    context.go("/home/$index");
-  }
-
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     return BottomNavigationBar(
         elevation: 0,
         currentIndex: currentIndex,
         onTap: (value) => context.go("/home/$value"),
+        selectedItemColor: colors.primary,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home_max), label: 'Inicio'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.label_outline), label: 'Categorías'),
+              icon: Icon(Icons.thumbs_up_down_outlined), label: 'Pupulares'),
           BottomNavigationBarItem(
               icon: Icon(Icons.favorite_outline), label: 'Favoritos')
         ]);

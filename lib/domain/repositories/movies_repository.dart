@@ -1,4 +1,5 @@
 import 'package:cinemapedia/domain/entities/movie.dart';
+import 'package:cinemapedia/domain/entities/video.dart';
 
 //Los repositorios seon los encargados de llamar al datasource
 
@@ -15,4 +16,8 @@ abstract class MoviesRepository {
   Future<Movie> getMovieByid(String id);
 
   Future<List<Movie>> searchMovie(String query);
+
+  Future<List<Movie>> getSimilarMovies(int movieId);
+
+  Future<List<Video>> getYoutubeVideosById(int movieId);
 }

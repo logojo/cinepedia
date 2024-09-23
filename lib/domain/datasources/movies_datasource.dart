@@ -5,6 +5,7 @@
 // y los metodos que se van a llamar para traer la data independientemente de la fuente
 
 import 'package:cinemapedia/domain/entities/movie.dart';
+import 'package:cinemapedia/domain/entities/video.dart';
 
 abstract class MoviesDatasource {
   Future<List<Movie>> getNowPlaying({int page = 1});
@@ -18,4 +19,8 @@ abstract class MoviesDatasource {
   Future<Movie> getMovieByid(String id);
 
   Future<List<Movie>> searchMovie(String query);
+
+  Future<List<Movie>> getSimilarMovies(int movieId);
+
+  Future<List<Video>> getYoutubeVideosById(int movieId);
 }

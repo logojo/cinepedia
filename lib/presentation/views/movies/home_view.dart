@@ -33,7 +33,7 @@ class HomeViewState extends ConsumerState<HomeView> {
     //cuando ya tenemos data las extraemos con el watch
     final slideMovies = ref.watch(moviesSlideshowProvider);
     final movies = ref.watch(nowPlayingMoviesProvider);
-    final popular = ref.watch(popularesProvider);
+    //final popular = ref.watch(popularesProvider);
     final topRated = ref.watch(topRatedProvider);
     final upcoming = ref.watch(upcomingProvider);
 
@@ -72,15 +72,15 @@ class HomeViewState extends ConsumerState<HomeView> {
                   ref.read(upcomingProvider.notifier).loadNextPAge();
                 },
               ),
-              MoviesHorizontal(
-                movies: popular,
-                title: 'Populares',
-                subtitle: 'Top 10',
-                loadNextPage: () {
-                  //cargando las siguientes peliculas usando la funcioón desde el provider
-                  ref.read(popularesProvider.notifier).loadNextPAge();
-                },
-              ),
+              // MoviesHorizontal(
+              //   movies: popular,
+              //   title: 'Populares',
+              //   subtitle: 'Top 10',
+              //   loadNextPage: () {
+              //     //cargando las siguientes peliculas usando la funcioón desde el provider
+              //     ref.read(popularesProvider.notifier).loadNextPAge();
+              //   },
+              // ),
               MoviesHorizontal(
                 movies: topRated,
                 title: 'Mejores calificadas',
