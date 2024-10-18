@@ -1,5 +1,6 @@
 import 'package:cinemapedia/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:cinemapedia/presentation/providers/providers.dart';
@@ -29,6 +30,11 @@ class HomeViewState extends ConsumerState<HomeView> {
     if (initialLoading) {
       return const Loader();
     }
+
+    // removiendo el splash screen una vez cargados los
+    //* puedo utilizar el splash screen para que se muestre mientras inicializa la aplicacion
+    //* por lo que el Loader ya no seria necesario
+    FlutterNativeSplash.remove();
 
     //cuando ya tenemos data las extraemos con el watch
     final slideMovies = ref.watch(moviesSlideshowProvider);
